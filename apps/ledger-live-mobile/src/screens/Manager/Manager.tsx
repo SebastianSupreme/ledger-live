@@ -83,7 +83,7 @@ const Manager = ({ navigation, route }: Props) => {
     ) {
       setIsFirmwareUpdateOpen(true);
     }
-  }, [firmwareUpdate, latestFirmware]);
+  }, [device?.modelId, deviceInfo, firmwareUpdate, latestFirmware]);
   /** general error state */
   const [error, setError] = useState<Error | null>(null);
   /** storage warning modal state */
@@ -175,7 +175,7 @@ const Manager = ({ navigation, route }: Props) => {
         });
       }
     },
-    [installedApps, navigation, refreshDeviceInfo],
+    [device, installedApps, navigation, refreshDeviceInfo],
   );
 
   return (
