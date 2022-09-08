@@ -3,6 +3,7 @@ export type FeatureId =
   | "learn"
   | "pushNotifications"
   | "llmUsbFirmwareUpdate"
+  | "llmBLEFirmwareUpdate"
   | "ratings"
   | "counterValue"
   | "deviceLocalization"
