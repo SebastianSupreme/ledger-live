@@ -2,9 +2,9 @@ import "../../__tests__/test-helpers/setup";
 
 import { EIP712Message } from "@ledgerhq/hw-app-eth/lib/modules/EIP712";
 import testEIP712Message from "@ledgerhq/hw-app-eth/tests/sample-messages/0.json";
-import ethSign from "./hw-signMessage";
-import { setEnv } from "../../env";
-import { createFixtureCryptoCurrency } from "../../mock/fixtures/cryptoCurrencies";
+import ethSign from "../hw-signMessage";
+import { setEnv } from "../../../env";
+import { createFixtureCryptoCurrency } from "../../../mock/fixtures/cryptoCurrencies";
 
 const signPersonalMessage = jest.fn(() =>
   Promise.resolve({
