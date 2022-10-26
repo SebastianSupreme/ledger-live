@@ -195,6 +195,15 @@ jobs:
         uses: ledgerhq/ledger-live/tools/actions/prepare-comment-screenshots@develop
         with:
           images: images.json
+      - name: Send Results and Generate Allure Report
+        uses: Xotabu4/send-to-allure-server-action@1
+        # always() needed because we want report for failed tests as well
+        if: ${{ always() }}
+        with:
+          allure-server-url: 'https://ledger-live.ars.green.ledgerlabs.net/allure/reports/da009f87-e3c9-46a1-8197-3527f8c812cd/index.html#'
+          username: ${{ secrets.ALLURE_USERNAME }}
+          password: ${{ secrets.ALLURE_PASSWORD }}
+          allure-results: ./apps/ledger-live-desktop/tests/artifacts/allure-results
       - name: create/update comment
         uses: actions/github-script@v6
         with:
