@@ -123,7 +123,7 @@ const InfoPanelButton = ({
   );
 };
 
-export const WebView = ({ manifest, inputs }: Props) => {
+export const WebViewV2 = ({ manifest, inputs }: Props) => {
   const targetRef: {
     current: null | RNWebView;
   } = useRef(null);
