@@ -61,7 +61,7 @@ jobs:
         if: always()
         with:
           name: test-ios-artifacts
-          path: apps/ledger-live-mobile/artifacts
+          path: apps/ledger-live-mobile/artifacts/
       - name: Generate Allure Report
         if: always()
         id: allure-server
