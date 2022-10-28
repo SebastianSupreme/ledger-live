@@ -1,8 +1,8 @@
 import { matchVersion } from "@ledgerhq/live-common/platform/filters";
 import { AppManifest } from "@ledgerhq/live-common/platform/types";
 import React from "react";
-import { WebViewV2 } from "./v2/index";
-import { WebView } from "./Player";
+import { WebView as WebViewV2 } from "./WebViewV2";
+import { WebView } from "./WebView";
 
 type Props = {
   manifest: AppManifest;

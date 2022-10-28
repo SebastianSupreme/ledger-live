@@ -14,7 +14,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import * as walletApiCore from "@ledgerhq/wallet-api-core";
-import { WalletAPIServer } from "@ledgerhq/wallet-api-server";
+import * as walletApiServer from "@ledgerhq/wallet-api-server";
 import { WebView as RNWebView } from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { JSONRPCRequest } from "json-rpc-2.0";
@@ -64,14 +64,14 @@ import {
 } from "@ledgerhq/live-common/platform/react";
 import trackingWrapper from "@ledgerhq/live-common/platform/tracking";
 import { useTheme } from "styled-components/native";
-import { NavigatorName, ScreenName } from "../../../const";
-import { broadcastSignedTx } from "../../../logic/screenTransactionHooks";
-import { accountsSelector } from "../../../reducers/accounts";
-import UpdateIcon from "../../../icons/Update";
-import InfoIcon from "../../../icons/Info";
-import InfoPanel from "../InfoPanel";
-import { track } from "../../../analytics/segment";
-import prepareSignTransaction from "../liveSDKLogic";
+import { NavigatorName, ScreenName } from "../../const";
+import { broadcastSignedTx } from "../../logic/screenTransactionHooks";
+import { accountsSelector } from "../../reducers/accounts";
+import UpdateIcon from "../../icons/Update";
+import InfoIcon from "../../icons/Info";
+import InfoPanel from "./InfoPanel";
+import { track } from "../../analytics/segment";
+import prepareSignTransaction from "./liveSDKLogic";
 
 const tracking = trackingWrapper(track);
 
@@ -123,7 +123,7 @@ const InfoPanelButton = ({
   );
 };
 
-export const WebViewV2 = ({ manifest, inputs }: Props) => {
+export const WebView = ({ manifest, inputs }: Props) => {
   const targetRef: {
     current: null | RNWebView;
   } = useRef(null);
@@ -554,7 +554,7 @@ export const WebViewV2 = ({ manifest, inputs }: Props) => {
       // // @ts-expect-error: works fine with a rn webview as well
       // const transport = new WindowMessageTransport(targetRef.current);
       console.log("walletApiCore", walletApiCore);
-      const serverInstance = new WalletAPIServer({
+      const serverInstance = new walletApiServer.WalletAPIServer({
         onMessage: () => {},
         send: () => {},
       });
