@@ -1,0 +1,37 @@
+name: "Generate Allure Report"
+description: "Uploading allure report and publishing it to Allure Server"
+inputs:
+  username:
+    required: true
+    description: "Allure Server Username"
+  password:
+    required: true
+    description: "Allure Server Password"
+  path:
+    required: true
+    description: "Report Path"
+outputs:
+  report-url:
+    description: "Allure report URL"
+    value: ${{ steps.publish-report.outputs.report-url }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Upload Allure Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: "allure-results"
+        path: "allure-results"
+
+    - name: Publish report on Allure Server
+      id: publish-report
+      uses: LedgerHQ/send-to-allure-server-action@1.1.0
+      with:
+        allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
+        build-name: ${{ github.workflow }}
+        build-url: ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
+        path: ${{ inputs.path }}

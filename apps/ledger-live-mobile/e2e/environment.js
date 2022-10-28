@@ -4,6 +4,8 @@ import {
   WorkerAssignReporter,
 } from "detox/runners/jest-circus";
 
+import AllureReporter from "./AllureReporterCircus"
+
 class CustomDetoxEnvironment extends DetoxCircusEnvironment {
   constructor({ globalConfig, projectConfig }, context) {
     super({ globalConfig, projectConfig }, context);
@@ -16,6 +18,7 @@ class CustomDetoxEnvironment extends DetoxCircusEnvironment {
     // This is strictly optional.
     this.registerListeners({
       SpecReporter,
+      AllureReporter,
       WorkerAssignReporter,
     });
   }
