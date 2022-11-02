@@ -155,7 +155,8 @@ jobs:
           key: detox-allure-android-${{ github.run_id }}
   
   allure-report:
-    runs-on: [self-hosted, shared]
+    name: "Allure Reports Export on Server"
+    runs-on: [ledger-live, linux]
     if: always()
     needs: [detox-tests-ios, detox-tests-android]
     steps:
