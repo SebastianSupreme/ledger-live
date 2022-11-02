@@ -3027,14 +3027,15 @@ importers:
       '@vercel/ncc': 0.33.4
       isomorphic-unfetch: 3.1.0
 
-  tools/actions/turbo-ignore:
+  tools/actions/turbo-affected:
     specifiers:
       '@actions/core': ^1.9.1
       '@actions/github': ^5.0.3
       tsup: ^6.2.2
-    devDependencies:
+    dependencies:
       '@actions/core': 1.9.1
       '@actions/github': 5.0.3
+    devDependencies:
       tsup: 6.2.2
 
   tools/actions/turborepo-gh-cache:
@@ -3270,7 +3271,6 @@ packages:
     dependencies:
       '@actions/http-client': 2.0.1
       uuid: 8.3.2
-    dev: true
 
   /@actions/exec/1.1.1:
     resolution: {integrity: sha512-+sCcHHbVdk93a0XT19ECtO/gIXoxvdsgQLzb2fE2/5sIZmWQuluYyjPQtrtTHdU1YzTZ7bAPN4sITq2xi1679w==}

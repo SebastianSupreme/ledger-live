@@ -1,0 +1,22 @@
+name: "Test Orchestrator"
+on: [push, pull_request]
+
+concurrency:
+  group: orchestrator
+  cancel-in-progress: true
+
+jobs:
+  running:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: ./tools/actions/turbo-affected
+        id: affected1
+        with:
+          package: "live-mobile"
+      - name: echo stuff
+        run: |
+          echo "${{ steps.affected1.outputs.affected }}"
+          echo "${{ steps.affected1.outputs.is-package-affected }}"

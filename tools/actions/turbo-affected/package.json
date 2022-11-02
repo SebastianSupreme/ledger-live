@@ -1,12 +1,12 @@
 {
-  "name": "@actions/turborepo-gh-cache",
+  "name": "@actions/turbo-affected",
   "version": "1.0.0",
-  "description": "Uses Github actions cache API to cache turborepo outputs",
+  "description": "Returns a list of affected packages",
   "author": "Valentin D. Pinkman <valentin.d.pinkman@icloud.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "tsup -d build src"
+    "build": "tsup -d build src/main.ts"
   },
   "dependencies": {
     "@actions/core": "^1.9.1",

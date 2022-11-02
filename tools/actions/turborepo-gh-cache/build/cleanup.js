@@ -2204,7 +2204,7 @@ try {
     );
   }
   if (cleanupCacheFolder) {
-    fs.rmdirSync(absoluteCacheDirectory);
+    fs.rmSync(absoluteCacheDirectory, { recursive: true });
   }
 } catch (err) {
   console.error(err);
