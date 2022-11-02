@@ -15,8 +15,8 @@ import {
 } from "react-native";
 import { from } from "rxjs";
 import { first } from "rxjs/operators";
-import * as walletApiCore from "@ledgerhq/wallet-api-core";
-import * as walletApiServer from "@ledgerhq/wallet-api-server";
+import { Transport } from "@ledgerhq/wallet-api-core";
+import { WalletAPIServer } from "@ledgerhq/wallet-api-server/lib/index";
 import { WebView as RNWebView } from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import { UserRefusedOnDevice } from "@ledgerhq/errors";
@@ -532,8 +532,8 @@ export const WebView = ({ manifest, inputs }: Props) => {
     ],
   );
 
-  const serverRef = useRef<walletApiServer.WalletAPIServer>();
-  const transportRef = useRef<walletApiCore.Transport>();
+  const serverRef = useRef<WalletAPIServer>();
+  const transportRef = useRef<Transport>();
 
   useEffect(() => {
     if (targetRef.current) {
@@ -545,9 +545,7 @@ export const WebView = ({ manifest, inputs }: Props) => {
           targetRef.current?.postMessage(message);
         },
       };
-      serverRef.current = new walletApiServer.WalletAPIServer(
-        transportRef.current,
-      );
+      serverRef.current = new WalletAPIServer(transportRef.current);
       serverRef.current.setAccounts(platformAccounts);
       serverRef.current.setCurrencies(currencies);
       serverRef.current.setHandler(
