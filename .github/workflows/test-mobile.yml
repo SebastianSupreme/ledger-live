@@ -170,7 +170,7 @@ jobs:
         with:
           path: allure-results-android
           key: detox-allure-android-${{ github.run_id }}
-      - uses: LedgerHQ/send-to-allure-server-action@v2
+      - uses: LedgerHQ/send-to-allure-server-action@2
         with:
           allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
           build-name: ${{ github.workflow }}-ios
@@ -179,7 +179,7 @@ jobs:
           password: ${{ secrets.ALLURE_PASSWORD }}
           path: "detox/iOS/${{ steps.branch-name.outputs.current_branch }}"
           allure-results: allure-results-ios
-      - uses: LedgerHQ/send-to-allure-server-action@v2
+      - uses: LedgerHQ/send-to-allure-server-action@2
         with:
           allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
           build-name: ${{ github.workflow }}-android
