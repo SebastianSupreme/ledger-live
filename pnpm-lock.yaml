@@ -559,8 +559,8 @@ importers:
       '@ledgerhq/types-cryptoassets': workspace:^
       '@ledgerhq/types-devices': workspace:^
       '@ledgerhq/types-live': workspace:^
-      '@ledgerhq/wallet-api-core': ^0.2.0
-      '@ledgerhq/wallet-api-server': ^0.2.0
+      '@ledgerhq/wallet-api-core': ^0.3.0
+      '@ledgerhq/wallet-api-server': ^0.3.0
       '@polkadot/reactnative-identicon': 2.2.1
       '@polkadot/x-randomvalues': 9.1.1
       '@react-native-async-storage/async-storage': ^1.15.17
@@ -747,8 +747,8 @@ importers:
       '@ledgerhq/types-cryptoassets': link:../../libs/ledgerjs/packages/types-cryptoassets
       '@ledgerhq/types-devices': link:../../libs/ledgerjs/packages/types-devices
       '@ledgerhq/types-live': link:../../libs/ledgerjs/packages/types-live
-      '@ledgerhq/wallet-api-core': 0.2.0
-      '@ledgerhq/wallet-api-server': 0.2.0
+      '@ledgerhq/wallet-api-core': 0.3.0
+      '@ledgerhq/wallet-api-server': 0.3.0
       '@polkadot/reactnative-identicon': 2.2.1_zqxy7fpkavjkgz5xll7ed4r6rq
       '@polkadot/x-randomvalues': 9.1.1
       '@react-native-async-storage/async-storage': 1.17.4_react-native@0.68.2
@@ -11727,19 +11727,19 @@ packages:
     resolution: {integrity: sha512-K3SETlNUJAjU/bN6dNJf56gfpxOhGldmClezIU5puw1PcGDvNf4y8vmEouVz5Htc2a/0vetklf0eIQD8Wk3Hww==}
     dev: false
 
-  /@ledgerhq/wallet-api-core/0.2.0:
-    resolution: {integrity: sha512-o8Wf+tSZoYw1TyZd0pBfvH6QD7iAo4Ie8eJsW0LSXdeDnYh6I2AizMjAkYUi2uJdSBmWletbAaBxBrBGZyKlWA==}
+  /@ledgerhq/wallet-api-core/0.3.0:
+    resolution: {integrity: sha512-q4H3H10n+JNW5O3ZpXMUpnc/hAmSrZ1I+XFqdNro8thL81BNWJS5nUnr7NFCRAhqVFERMMk4Y4JRLtyTemjIsQ==}
     dependencies:
       '@altostra/type-validations': 2.6.5
       bignumber.js: 9.0.2
       uuid: 9.0.0
     dev: false
 
-  /@ledgerhq/wallet-api-server/0.2.0:
-    resolution: {integrity: sha512-ql4gqlGoW5TBQiH7hcT8q/J6qotSWT7P6sPgTvSTZhVKeVIEMIFg0DBmcoZJSEi5cskQwrN4B+4UALwPRwzL8Q==}
+  /@ledgerhq/wallet-api-server/0.3.0:
+    resolution: {integrity: sha512-aVv1H6iXUQvFA7c7TRPf7G2fKHRtn1iOelpPTjapqMXxwxjk3Z8TA84yOBy1ZPJJxmT0Tvkg71lrZ49SRq/KBQ==}
     dependencies:
       '@altostra/type-validations': 2.6.5
-      '@ledgerhq/wallet-api-core': 0.2.0
+      '@ledgerhq/wallet-api-core': 0.3.0
       bignumber.js: 9.0.2
       json-rpc-2.0: 1.1.0
       rxjs: 7.5.7

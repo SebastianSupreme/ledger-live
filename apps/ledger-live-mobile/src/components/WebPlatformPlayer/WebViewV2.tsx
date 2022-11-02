@@ -13,11 +13,12 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import { from } from "rxjs";
+import { first } from "rxjs/operators";
 import * as walletApiCore from "@ledgerhq/wallet-api-core";
 import * as walletApiServer from "@ledgerhq/wallet-api-server";
 import { WebView as RNWebView } from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
-import { JSONRPCRequest } from "json-rpc-2.0";
 import { UserRefusedOnDevice } from "@ledgerhq/errors";
 import {
   Account,
@@ -51,15 +52,14 @@ import {
   CompleteExchangeUiRequest,
   signMessageLogic,
 } from "@ledgerhq/live-common/platform/logic";
-import { useJSONRPCServer } from "@ledgerhq/live-common/platform/JSONRPCServer";
 import { accountToPlatformAccount } from "@ledgerhq/live-common/platform/converters";
 import {
   serializePlatformAccount,
   serializePlatformSignedTransaction,
 } from "@ledgerhq/live-common/platform/serializers";
 import {
-  useListPlatformAccounts,
-  useListPlatformCurrencies,
+  usePlatformAccounts,
+  usePlatformCurrencies,
   usePlatformUrl,
 } from "@ledgerhq/live-common/platform/react";
 import trackingWrapper from "@ledgerhq/live-common/platform/tracking";
@@ -140,8 +140,8 @@ export const WebView = ({ manifest, inputs }: Props) => {
     },
     inputs,
   );
-  const listAccounts = useListPlatformAccounts(accounts);
-  const listPlatformCurrencies = useListPlatformCurrencies();
+  const platformAccounts = usePlatformAccounts(accounts);
+  const currencies = usePlatformCurrencies();
 
   const requestAccount = useCallback(
     ({
@@ -513,8 +513,6 @@ export const WebView = ({ manifest, inputs }: Props) => {
 
   const handlers = useMemo(
     () => ({
-      "account.list": listAccounts,
-      "currency.list": listPlatformCurrencies,
       "account.request": requestAccount,
       "account.receive": receiveOnAccount,
       "transaction.sign": signTransaction,
@@ -524,8 +522,6 @@ export const WebView = ({ manifest, inputs }: Props) => {
       "message.sign": signMessage,
     }),
     [
-      listAccounts,
-      listPlatformCurrencies,
       requestAccount,
       receiveOnAccount,
       signTransaction,
@@ -535,45 +531,56 @@ export const WebView = ({ manifest, inputs }: Props) => {
       signMessage,
     ],
   );
-  const handleSend = useCallback(
-    (request: JSONRPCRequest): Promise<void> => {
-      targetRef?.current?.postMessage(
-        JSON.stringify(request),
-        typeof manifest.url === "string"
-          ? manifest.url
-          : manifest.url?.origin ?? "",
-      );
 
-      return Promise.resolve();
-    },
-    [manifest],
-  );
+  const serverRef = useRef<walletApiServer.WalletAPIServer>();
+  const transportRef = useRef<walletApiCore.Transport>();
 
   useEffect(() => {
     if (targetRef.current) {
-      // // @ts-expect-error: works fine with a rn webview as well
-      // const transport = new WindowMessageTransport(targetRef.current);
-      console.log("walletApiCore", walletApiCore);
-      const serverInstance = new walletApiServer.WalletAPIServer({
-        onMessage: () => {},
-        send: () => {},
-      });
-      console.log(serverInstance);
+      transportRef.current = {
+        onMessage: () => {
+          // empty fn will be replaced by the server
+        },
+        send: message => {
+          targetRef.current?.postMessage(message);
+        },
+      };
+      serverRef.current = new walletApiServer.WalletAPIServer(
+        transportRef.current,
+      );
+      serverRef.current.setAccounts(platformAccounts);
+      serverRef.current.setCurrencies(currencies);
+      serverRef.current.setHandler(
+        "account.request",
+        async ({ accounts$, currencies$ }) => {
+          const accounts = await from(accounts$).pipe(first()).toPromise();
+          const currencies = await from(currencies$).pipe(first()).toPromise();
+          console.log(accounts, currencies);
+          if (!accounts[0]) {
+            throw new Error("nope");
+          }
+          return accounts[0];
+        },
+      );
+      console.log(serverRef.current);
     }
-    console.log("I was here!!!");
+    // Only used to init the server, no update needed
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [receive] = useJSONRPCServer(handlers, handleSend);
-  const handleMessage = useCallback(
-    e => {
-      // FIXME: event isn't the same on desktop & mobile
-      // if (e.isTrusted && e.origin === manifest.url.origin && e.data) {
-      if (e.nativeEvent?.data) {
-        receive(JSON.parse(e.nativeEvent.data));
-      }
-    },
-    [receive],
-  );
+  useEffect(() => {
+    serverRef.current?.setAccounts(platformAccounts);
+  }, [platformAccounts]);
+
+  useEffect(() => {
+    serverRef.current?.setCurrencies(currencies);
+  }, [currencies]);
+
+  const handleMessage = useCallback(e => {
+    if (e.nativeEvent?.data) {
+      transportRef.current?.onMessage?.(e.nativeEvent.data);
+    }
+  }, []);
 
   const handleLoad = useCallback(() => {
     if (!widgetLoaded) {
