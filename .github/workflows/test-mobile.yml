@@ -62,14 +62,12 @@ jobs:
         with:
           name: test-ios-artifacts
           path: apps/ledger-live-mobile/artifacts/
-      - name: Generate Allure Report
+      - name: Cache Allure Results
         if: always()
-        id: allure-server
-        uses: ./.github/actions/generate-allure-report
+        uses: actions/cache@v3
         with:
-          username: ${{ secrets.ALLURE_LOGIN }}
-          password: ${{ secrets.ALLURE_PASSWORD }}
           path: apps/ledger-live-mobile/allure-results
+          key: detox-allure-ios-${{ github.run_id }}
 
   detox-tests-android:
     name: "Ledger Live Mobile - Android Detox Tests"
@@ -149,11 +147,43 @@ jobs:
         with:
           name: test-android-artifacts
           path: apps/ledger-live-mobile/artifacts/
-      - name: Generate Allure Report
+      - name: Cache Allure Results
         if: always()
-        id: allure-server
-        uses: ./.github/actions/generate-allure-report
+        uses: actions/cache@v3
         with:
+          path: apps/ledger-live-mobile/allure-results
+          key: detox-allure-android-${{ github.run_id }}
+  
+  allure-report:
+    runs-on: [self-hosted, shared]
+    if: always()
+    needs: [detox-tests-ios, detox-tests-android]
+    steps:
+      - id: branch-name
+        uses: tj-actions/branch-names@v6
+      - uses: actions/cache@v3
+        with:
+          path: allure-results-ios
+          key: detox-allure-ios-${{ github.run_id }}
+      - uses: actions/cache@v3
+        with:
+          path: allure-results-android
+          key: detox-allure-android-${{ github.run_id }}
+      - uses: LedgerHQ/send-to-allure-server-action@v2
+        with:
+          allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
+          build-name: ${{ github.workflow }}-ios
+          build-url: https://github.com/LedgerHQ/lama-ethereum/actions/runs/${{ github.run_id }}
           username: ${{ secrets.ALLURE_LOGIN }}
           password: ${{ secrets.ALLURE_PASSWORD }}
-          path: apps/ledger-live-mobile/allure-results
+          path: "detox/iOS/${{ steps.branch-name.outputs.current_branch }}"
+          allure-results: allure-results-ios
+      - uses: LedgerHQ/send-to-allure-server-action@v2
+        with:
+          allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
+          build-name: ${{ github.workflow }}-android
+          build-url: https://github.com/LedgerHQ/lama-ethereum/actions/runs/${{ github.run_id }}
+          username: ${{ secrets.ALLURE_LOGIN }}
+          password: ${{ secrets.ALLURE_PASSWORD }}
+          path: "detox/android/${{ steps.branch-name.outputs.current_branch }}"
+          allure-results: allure-results-android
