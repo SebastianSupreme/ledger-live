@@ -196,7 +196,7 @@ jobs:
         with:
           images: images.json
       - name: Send Results and Generate Allure Report
-        uses: LedgerHQ/send-to-allure-server-action@2
+        uses: LedgerHQ/send-to-allure-server-action@2.0.0
         # always() needed because we want report for failed tests as well
         if: ${{ always() }}
         with:
