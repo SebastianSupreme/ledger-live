@@ -4,7 +4,7 @@ import { Flex, Text } from "@ledgerhq/native-ui";
 import styled from "styled-components/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Alert from "../components/Alert";
-import { storyInstancesIDsMap } from "../components/Storyly/shared";
+import { StorylyInstanceID } from "../components/Storyly/shared";
 import StoryBar from "../components/Storyly/StoryBar";
 import LanguageSettingsRow from "./Settings/General/LanguageRow";
 
@@ -28,13 +28,10 @@ const DebugStoryly = () => (
           instances used in the app.
         </Alert>
         <LanguageSettingsRow />
-        {Object.keys(storyInstancesIDsMap).map((key, index) => (
+        {Object.entries(StorylyInstanceID).map(([key, value], index) => (
           <Flex key={index} py={5} flex={1}>
             <Text>{key}</Text>
-            <StyledStoryBar
-              instanceID={storyInstancesIDsMap[key]}
-              onFail={() => {}}
-            />
+            <StyledStoryBar instanceID={value} onFail={() => {}} />
           </Flex>
         ))}
       </Flex>

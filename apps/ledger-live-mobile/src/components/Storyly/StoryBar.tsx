@@ -1,15 +1,8 @@
-import { Button, Flex } from "@ledgerhq/native-ui";
+import { Flex } from "@ledgerhq/native-ui";
 import { isEqual } from "lodash";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { PixelRatio, Platform, StyleProp, ViewStyle } from "react-native";
-import Animated, {
-  Easing,
-  FadeIn,
-  FadeInDown,
-  FadeOut,
-  Layout,
-  SlideOutLeft,
-} from "react-native-reanimated";
+import { StyleProp, ViewStyle } from "react-native";
+import Animated, { Easing, Layout } from "react-native-reanimated";
 import { Storyly } from "storyly-react-native";
 import styled from "styled-components/native";
 import StoryGroup from "./StoryGroup";
