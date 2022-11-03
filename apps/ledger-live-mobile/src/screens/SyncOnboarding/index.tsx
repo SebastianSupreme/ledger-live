@@ -147,14 +147,18 @@ export const SyncOnboarding = ({
         status: "inactive",
         estimatedTime: 300,
         renderBody: () => (
-          <Text variant="bodyLineHeight">
-            {t("syncOnboarding.seedStep.description", { productName })}
+          <Flex>
+            <Text variant="bodyLineHeight" mb={6}>
+              {t("syncOnboarding.seedStep.description", { productName })}
+            </Text>
             <StoryBar
               instanceID={StorylyInstanceID.onboardingTips}
               scrollContainerStyle={{}}
               onFail={() => {}}
+              vertical
+              keepOriginalOrder
             />
-          </Text>
+          </Flex>
         ),
       },
       {
