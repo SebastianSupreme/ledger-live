@@ -62,12 +62,12 @@ jobs:
         with:
           name: test-ios-artifacts
           path: apps/ledger-live-mobile/artifacts/
-      - name: Cache Allure Results
+      - name: Upload Allure report
         if: always()
-        uses: pat-s/always-upload-cache@v2
+        uses: actions/upload-artifact@v3
         with:
+          name: "allure-results-ios"
           path: apps/ledger-live-mobile/allure-results
-          key: detox-allure-ios-${{ github.run_id }}
 
   detox-tests-android:
     name: "Ledger Live Mobile - Android Detox Tests"
@@ -147,12 +147,12 @@ jobs:
         with:
           name: test-android-artifacts
           path: apps/ledger-live-mobile/artifacts/
-      - name: Cache Allure Results
+      - name: Upload Allure Report
         if: always()
-        uses: pat-s/always-upload-cache@v2
+        uses: actions/upload-artifact@v3
         with:
+          name: "allure-results-android"
           path: apps/ledger-live-mobile/allure-results
-          key: detox-allure-android-${{ github.run_id }}
   
   allure-report:
     name: "Allure Reports Export on Server"
@@ -162,14 +162,12 @@ jobs:
     steps:
       - id: branch-name
         uses: tj-actions/branch-names@v6
-      - uses: actions/cache@v2
+      - uses: actions/download-artifact@v2
         with:
-          path: allure-results-ios
-          key: detox-allure-ios-${{ github.run_id }}
-      - uses: actions/cache@v2
+          name: allure-results-android
+      - uses: actions/download-artifact@v2
         with:
-          path: allure-results-android
-          key: detox-allure-android-${{ github.run_id }}
+          name: allure-results-ios
       - uses: LedgerHQ/send-to-allure-server-action@2.0.0
         with:
           allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
