@@ -147,7 +147,7 @@ export const SyncOnboarding = ({
         status: "inactive",
         estimatedTime: 300,
         renderBody: () => (
-          <Flex>
+          <Flex pb={1}>
             <Text variant="bodyLineHeight" mb={6}>
               {t("syncOnboarding.seedStep.description", { productName })}
             </Text>
