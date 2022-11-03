@@ -64,7 +64,7 @@ jobs:
           path: apps/ledger-live-mobile/artifacts/
       - name: Cache Allure Results
         if: always()
-        uses: actions/cache@v3
+        uses: pat-s/always-upload-cache@v3
         with:
           path: apps/ledger-live-mobile/allure-results
           key: detox-allure-ios-${{ github.run_id }}
@@ -149,7 +149,7 @@ jobs:
           path: apps/ledger-live-mobile/artifacts/
       - name: Cache Allure Results
         if: always()
-        uses: actions/cache@v3
+        uses: pat-s/always-upload-cache@v3
         with:
           path: apps/ledger-live-mobile/allure-results
           key: detox-allure-android-${{ github.run_id }}
