@@ -28,7 +28,7 @@ const Title = styled(Text).attrs({
 
 const Touchable = styled(TouchableOpacity)<{ seen: boolean }>`
   border-color: ${p =>
-    p.seen ? p.theme.colors.neutral.c50 : p.theme.colors.warning.c100};
+    p.seen ? p.theme.colors.primary.c50 : p.theme.colors.primary.c80};
   border-width: 1px;
   padding: 3px;
   border-radius: 100px;
