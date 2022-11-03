@@ -176,7 +176,7 @@ jobs:
           username: ${{ secrets.ALLURE_LOGIN }}
           password: ${{ secrets.ALLURE_PASSWORD }}
           path: "detox/iOS/${{ steps.branch-name.outputs.current_branch }}"
-          allure-results: allure-results-ios
+          allure-results: /runner/_work/ledger-live/ledger-live/allure-results-ios
       - uses: LedgerHQ/send-to-allure-server-action@2.0.0
         with:
           allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
@@ -185,4 +185,4 @@ jobs:
           username: ${{ secrets.ALLURE_LOGIN }}
           password: ${{ secrets.ALLURE_PASSWORD }}
           path: "detox/android/${{ steps.branch-name.outputs.current_branch }}"
-          allure-results: allure-results-android
+          allure-results: /runner/_work/ledger-live/ledger-live/allure-results-android
