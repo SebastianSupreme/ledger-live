@@ -11,7 +11,11 @@ import { SettingsNavigatorStackParamList } from "../../../components/RootNavigat
 
 type Navigation = StackNavigatorProps<SettingsNavigatorStackParamList>;
 
-const LanguageSettingsRow = () => {
+type Props = {
+  compact: boolean;
+};
+
+const LanguageSettingsRow: React.FC<Props> = ({ compact }) => {
   const { locale } = useLocale();
   const { navigate } = useNavigation<Navigation["navigation"]>();
   const onNavigate = useCallback(() => {
@@ -27,6 +31,7 @@ const LanguageSettingsRow = () => {
       desc={t("settings.display.languageDesc")}
       arrowRight
       onPress={onNavigate}
+      compact={compact}
     >
       <Text variant={"body"} fontWeight={"medium"} color="primary.c80">
         {languages[locale] || locale}

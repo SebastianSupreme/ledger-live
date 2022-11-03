@@ -43,6 +43,8 @@ import {
 } from "../../components/RootNavigator/types/BaseNavigator";
 import { RootStackParamList } from "../../components/RootNavigator/types/RootNavigator";
 import { SyncOnboardingStackParamList } from "../../components/RootNavigator/types/SyncOnboardingNavigator";
+import StoryBar from "../../components/Storyly/StoryBar";
+import { StorylyInstanceID } from "../../components/Storyly/shared";
 
 type StepStatus = "completed" | "active" | "inactive";
 
@@ -147,6 +149,11 @@ export const SyncOnboarding = ({
         renderBody: () => (
           <Text variant="bodyLineHeight">
             {t("syncOnboarding.seedStep.description", { productName })}
+            <StoryBar
+              instanceID={StorylyInstanceID.onboardingTips}
+              scrollContainerStyle={{}}
+              onFail={() => {}}
+            />
           </Text>
         ),
       },

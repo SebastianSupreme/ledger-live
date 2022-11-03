@@ -1,6 +1,13 @@
-import { Flex } from "@ledgerhq/native-ui";
+import { Box, Flex } from "@ledgerhq/native-ui";
+import { FlexBoxProps } from "@ledgerhq/native-ui/components/Layout/Flex";
 import { isEqual } from "lodash";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  ComponentProps,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import Animated, { Easing, Layout } from "react-native-reanimated";
 import { Storyly } from "storyly-react-native";
@@ -10,7 +17,9 @@ import StorylyWrapper, { Props as StorylyWrapperProps } from "./StorylyWrapper";
 
 type Props = StorylyWrapperProps & {
   style?: StyleProp<ViewStyle>;
-  scrollContainerStyle: StyleProp<ViewStyle>;
+  scrollContainerStyle?: ComponentProps<
+    typeof ScrollView
+  >["scrollContainerStyle"];
   /**
    * Controls whether the "state" state of the story groups affects the order in
    * which they are displayed.
@@ -21,6 +30,7 @@ type Props = StorylyWrapperProps & {
    * Default is false.
    */
   keepOriginalOrder?: boolean;
+  vertical?: boolean;
 };
 
 type StoryGroupInfo = {
@@ -46,22 +56,36 @@ const PlaceholderContent: StoryGroupInfo[] = new Array(5).fill(
 
 type StoryInfo = { seen: boolean; id?: string };
 
-const ScrollView = styled.ScrollView.attrs({ horizontal: true })`
+const ScrollView = styled.ScrollView`
   flex: 1;
 `;
 
+type StoryGroupWrapperProps = {
+  vertical: boolean;
+  isLast: boolean;
+};
+
 const AnimatedStoryGroupWrapper = Animated.createAnimatedComponent<
-  React.ComponentProps<typeof Flex> & {
-    isLast: boolean;
-  }
+  FlexBoxProps & StoryGroupWrapperProps
 >(
-  styled(Flex).attrs<{ isLast: boolean }>(p => ({
-    mr: p.isLast ? 0 : "14px",
+  styled(Flex).attrs<StoryGroupWrapperProps>(p => ({
+    mr: p.isLast || p.vertical ? 0 : 5,
+    mb: p.isLast || !p.vertical ? 0 : 7,
   }))``,
 );
 
+const defaultScrollContainerStyle = {
+  justifyContent: "center",
+  flexGrow: 1,
+};
+
 const StoryBar: React.FC<Props> = props => {
-  const { keepOriginalOrder = false, style } = props;
+  const {
+    keepOriginalOrder = false,
+    style,
+    vertical = false,
+    scrollContainerStyle = defaultScrollContainerStyle,
+  } = props;
 
   const storylyRef = useRef<Storyly>(null);
   const [storyGroupList, setStoryGroupList] =
@@ -122,10 +146,12 @@ const StoryBar: React.FC<Props> = props => {
             <AnimatedStoryGroupWrapper
               key={storyGroup.id}
               layout={Layout.easing(Easing.inOut(Easing.quad)).duration(300)}
-              isLast={index === arr.length}
+              isLast={index === arr.length - 1}
+              vertical={vertical}
             >
               <StoryGroup
                 {...storyGroup}
+                titlePosition={vertical ? "right" : "bottom"}
                 onPress={() =>
                   handleStoryGroupPressed(storyGroup.id, nextStoryToShowId)
                 }
@@ -133,18 +159,24 @@ const StoryBar: React.FC<Props> = props => {
             </AnimatedStoryGroupWrapper>
           );
         }),
-    [storyGroupList, handleStoryGroupPressed, keepOriginalOrder],
+    [storyGroupList, handleStoryGroupPressed, keepOriginalOrder, vertical],
   );
 
   return (
     <Flex flexDirection="column" flex={1} style={style}>
-      <ScrollView
-        contentContainerStyle={props.scrollContainerStyle}
-        showsHorizontalScrollIndicator={false}
-      >
-        {renderedStoryGroups}
-      </ScrollView>
-      <Flex height={0} opacity={0}>
+      {vertical ? (
+        <Flex alignItems="flex-start">{renderedStoryGroups}</Flex>
+      ) : (
+        <ScrollView
+          contentContainerStyle={scrollContainerStyle}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          horizontal
+        >
+          {renderedStoryGroups}
+        </ScrollView>
+      )}
+      <Box height={0} opacity={0}>
         <StorylyWrapper
           ref={storylyRef}
           {...props}
@@ -161,7 +193,7 @@ const StoryBar: React.FC<Props> = props => {
            */
           <StorylyWrapper {...props} onLoad={handleLoad} />
         )}
-      </Flex>
+      </Box>
     </Flex>
   );
 };
