@@ -5,7 +5,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Platform } from "react-native";
 import { useSelector } from "react-redux";
 import { Storyly } from "storyly-react-native";
 import styled from "styled-components/native";
@@ -14,15 +13,6 @@ import { StorylyInstanceID } from "./shared"; // eslint-disable-line no-unused-v
 
 export type Props = {
   instanceID: StorylyInstanceID;
-  /**
-   * Videos not supported on Android for now, causing a crash if they load.
-   * As a better-than-nothing safety net, if this props is set to true
-   * it will fully disable the current instance in case it's Android and some
-   * video content is detected.
-   *
-   * Default is true.
-   */
-  shouldBlockVideoContentOnAndroid?: boolean;
   /**
    * If there are no story groups loaded, it will fallback to loading the
    * english version.
@@ -33,7 +23,6 @@ export type Props = {
   onFail: (event: String) => void;
 } & Omit<Storyly.Props, "storylyId" | "onFail">;
 
-// @ts-ignore idk how to fix this
 const StyledStoryly = styled(Storyly)`
   flex: 1; // necessary for touches to work;
 `;
@@ -46,7 +35,6 @@ const StorylyWrapper = forwardRef(
       onLoad,
       onFail,
       onEvent,
-      shouldBlockVideoContentOnAndroid = false,
       shouldFallbackToEnglishIfEmpty = true,
     } = props;
 
@@ -68,18 +56,6 @@ const StorylyWrapper = forwardRef(
       (event: Storyly.StoryLoadEvent) => {
         if (shouldFallbackToEnglishIfEmpty && event.storyGroupList.length === 0)
           setFallbackToEnglish(true);
-        if (shouldBlockVideoContentOnAndroid && Platform.OS === "android") {
-          if (
-            event.storyGroupList.find(
-              storyGroup =>
-                !!storyGroup.stories.find(story => story.media.type !== 1),
-            )
-          ) {
-            setInstanceIdBlocked(instanceID);
-            onFail && onFail("StorylyWrapper: Video story blocked on Android");
-            return;
-          }
-        }
         onLoad && onLoad(event);
       },
       [
@@ -87,7 +63,6 @@ const StorylyWrapper = forwardRef(
         onLoad,
         shouldFallbackToEnglishIfEmpty,
         setFallbackToEnglish,
-        shouldBlockVideoContentOnAndroid,
         setInstanceIdBlocked,
         instanceID,
       ],
