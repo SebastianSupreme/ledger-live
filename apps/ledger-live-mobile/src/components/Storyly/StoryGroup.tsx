@@ -3,7 +3,8 @@ import { FlexBoxProps } from "@ledgerhq/native-ui/components/Layout/Flex";
 import React from "react";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import styled from "styled-components/native";
+import styled, { useTheme } from "styled-components/native";
+import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 export type Props = {
   id?: string;
@@ -15,24 +16,58 @@ export type Props = {
   titlePosition: "bottom" | "right";
 };
 
+const innerImageSize = 56;
+const borderWidth = 2;
+const borderInnerPadding = 2;
+
 const Title = styled(Text).attrs({
   variant: "body",
   fontWeight: "medium",
 })``;
 
 const Touchable = styled(TouchableOpacity)<{ seen: boolean }>`
-  border-color: ${p =>
-    p.seen ? p.theme.colors.primary.c50 : p.theme.colors.primary.c80};
-  border-width: 2px;
-  padding: 3px;
+  padding: ${borderInnerPadding + borderWidth}px;
   border-radius: 100px;
 `;
 
 const Illustration = styled(Image).attrs({ resizeMode: "cover" })`
-  height: 56px;
-  width: 56px;
+  height: ${innerImageSize}px;
+  width: ${innerImageSize}px;
   border-radius: 72px;
 `;
+
+const Border: React.FC<{ seen: boolean }> = ({ seen }) => {
+  const { colors } = useTheme();
+  const containerSize =
+    innerImageSize + 2 * borderWidth + 2 * borderInnerPadding;
+  return (
+    <Flex position="absolute" height={containerSize} width={containerSize}>
+      <Svg height={containerSize} width={containerSize}>
+        <Defs>
+          <LinearGradient id="grad" x1="0" y1="1" x2="1" y2="0">
+            <Stop
+              offset="0"
+              stopColor={seen ? colors.neutral.c30 : "#461AF7"}
+              stopOpacity="1"
+            />
+            <Stop
+              offset="1"
+              stopColor={seen ? colors.neutral.c30 : "#FF6E33"}
+              stopOpacity="1"
+            />
+          </LinearGradient>
+        </Defs>
+        <Circle
+          cx={containerSize / 2}
+          cy={containerSize / 2}
+          r={innerImageSize / 2 + borderInnerPadding}
+          strokeWidth={borderWidth}
+          stroke="url(#grad)"
+        />
+      </Svg>
+    </Flex>
+  );
+};
 
 const StoryGroup: React.FC<Props> = props => {
   const { onPress, seen, title, iconUrl, titlePosition } = props;
@@ -66,6 +101,7 @@ const StoryGroup: React.FC<Props> = props => {
         >
           <Illustration source={{ uri: iconUrl }} />
         </Flex>
+        <Border seen={seen} />
       </Touchable>
       <Title {...titleProps}>{title}</Title>
     </Flex>

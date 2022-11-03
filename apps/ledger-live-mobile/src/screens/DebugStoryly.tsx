@@ -8,17 +8,6 @@ import { StorylyInstanceID } from "../components/Storyly/shared";
 import StoryBar from "../components/Storyly/StoryBar";
 import LanguageSettingsRow from "./Settings/General/LanguageRow";
 
-const StyledStoryBar = styled(StoryBar).attrs({
-  scrollContainerStyle: {
-    paddingHorizontal: 16,
-    justifyContent: "center",
-    flexGrow: 1,
-  },
-})`
-  flex: 1;
-  padding-vertical: 16px;
-`;
-
 const DebugStoryly = () => {
   const [verticalLayout, setVerticalLayout] = useState(false);
   const [keepOriginalOrder, setKeepOriginalOrder] = useState(false);
