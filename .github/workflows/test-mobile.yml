@@ -64,7 +64,7 @@ jobs:
           path: apps/ledger-live-mobile/artifacts/
       - name: Cache Allure Results
         if: always()
-        uses: pat-s/always-upload-cache@v3
+        uses: pat-s/always-upload-cache@v2
         with:
           path: apps/ledger-live-mobile/allure-results
           key: detox-allure-ios-${{ github.run_id }}
@@ -149,7 +149,7 @@ jobs:
           path: apps/ledger-live-mobile/artifacts/
       - name: Cache Allure Results
         if: always()
-        uses: pat-s/always-upload-cache@v3
+        uses: pat-s/always-upload-cache@v2
         with:
           path: apps/ledger-live-mobile/allure-results
           key: detox-allure-android-${{ github.run_id }}
@@ -162,11 +162,11 @@ jobs:
     steps:
       - id: branch-name
         uses: tj-actions/branch-names@v6
-      - uses: actions/cache@v3
+      - uses: actions/cache@v2
         with:
           path: allure-results-ios
           key: detox-allure-ios-${{ github.run_id }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@v2
         with:
           path: allure-results-android
           key: detox-allure-android-${{ github.run_id }}
